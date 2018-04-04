@@ -1,0 +1,10 @@
+{
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::3857" } },
+"features": [
+
+{ "type": "Feature", "properties": { "位置": "金堰15號", "定位": "新北市烏來區忠治里金堰15號", "空屋": null, "空地": null, "林地": null, "其他": "髒亂點", "lat": 24.880316, "lng": 121.554866 }, "geometry": { "type": "Point", "coordinates": [ 13531425.784681013, 2861051.285520396 ] } },
+{ "type": "Feature", "properties": { "位置": "環山路與溫泉街大轉彎處", "定位": "新北市烏來區福山里環山路與溫泉街大轉彎處", "空屋": null, "空地": "V", "林地": null, "其他": "髒亂點", "lat": 24.952407, "lng": 121.546771 }, "geometry": { "type": "Point", "coordinates": [ 13530524.655286631, 2869900.0278429519 ] } },
+{ "type": "Feature", "properties": { "位置": "文化街17巷2弄口", "定位": "新北市深坑區深坑里文化街17巷2弄口", "空屋": "V", "空地": null, "林地": null, "其他": null, "lat": 25.001098, "lng": 121.620025 }, "geometry": { "type": "Point", "coordinates": [ 13538679.2532652, 2875879.4895148049 ] } }
+]
+}

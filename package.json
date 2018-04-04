@@ -19,6 +19,8 @@
   "homepage": "https://github.com/caps9129/weather_data#readme",
   "dependencies": {
     "express": "^4.16.3",
+    "npm": "^5.8.0",
+    "proj4": "^2.4.4",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {

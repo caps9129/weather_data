@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Modify features example</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.10.1/ol.min.css" type="text/css">
+
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.10.1/ol.min.js"></script>
+
+
+</head>
+
+<body>
+    <div class="container-fluid">
+
+        <div class="row-fluid">
+            <div class="span12">
+                <div id="map" class="map">
+                    <div id="scale-line"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+
+        var osm = new ol.layer.Tile({
+            source: new ol.source.OSM()
+        });
+
+        var Fspouse = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                format: new ol.format.GeoJSON(),
+                url: './spouse_e3857.geojson',
+            })
+        });
+
+
+
+
+
+        var myStyles = {
+
+            lev1: new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: '#edf8fb'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#159ff2',
+                    width: 3.0
+                })
+            }),
+            lev2: new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: '#b3cde3'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#159ff2',
+                    width: 3.0
+                })
+            }),
+            lev3: new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: '#8c96c6'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#159ff2',
+                    width: 3.0
+                })
+            }),
+            lev4: new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: '#8856a7'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#159ff2',
+                    width: 3.0
+                })
+            }),
+            lev5: new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: '#810f7c'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#159ff2',
+                    width: 3.0
+                })
+            }),
+
+        };
+
+
+
+        var view = new ol.View({
+            center: ol.proj.transform([121.364604, 24.9875278], 'EPSG:4326', 'EPSG:3857'),
+            zoom: 8
+        });
+
+        var map = new ol.Map({
+            controls: ol.control.defaults().extend([
+                new ol.control.ScaleLine({ className: 'ol-scale-line', target: document.getElementById('scale-line') })
+            ]),
+            layers: [osm, Fspouse],
+            target: 'map',
+            view: view
+        });
+
+
+
+
+        function myStyleFunctionLev(feature) {
+
+            console.log(feature.get('總計'));
+
+            if (feature.get('總計') > 0 && feature.get('總計') <= 2500) {
+
+                return myStyles.lev1;
+            }
+            else if (feature.get('總計') > 2500 && feature.get('總計') <= 5000) {
+
+                return myStyles.lev2;
+            }
+            else if (feature.get('總計') > 5000 && feature.get('總計') <= 7500) {
+
+                return myStyles.lev3;
+            }
+            else if (feature.get('總計') > 7500 && feature.get('總計') <= 10000) {
+
+                return myStyles.lev4;
+            }
+            else {
+                return myStyles.lev5;
+            }
+        }
+
+        Fspouse.setStyle(myStyleFunctionLev);
+
+    </script>
+</body>
+
+</html>

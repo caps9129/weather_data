@@ -1,4 +1,3 @@
-
 var url = "./O-B0045-001.xml";
 var method = "GET";
 
@@ -16,32 +15,11 @@ makeCorsRequest(method, url)
 
 function ImportGeojson(geojson) {
     console.log("geojson:", geojson)
-    //console.warn(geojson);
-
-    //geojson = jQuery.parseJSON(JSON.stringify(geojson));
-    //geojson_str = JSON.stringify(geojson);
-    //console.warn(geojson_str);
 
     var osm = new ol.layer.Tile({
         source: new ol.source.OSM()
     });
 
-
-    var styles = {
-        'Point': [new ol.style.Style({
-            image: new ol.style.Circle({
-                fill: new ol.style.Fill({ color: [255, 255, 255, 1] }),
-                stroke: new ol.style.Stroke({ color: [0, 0, 0, 1] }),
-                radius: 5
-            })
-        })],
-        'LineString': [new ol.style.Style({
-            stroke: new ol.style.Stroke({
-                color: 'green',
-                width: 5
-            })
-        })]
-    };
 
     var features = new ol.format.GeoJSON().readFeatures(geojson, {
         featureProjection: 'EPSG:3857'
@@ -53,98 +31,54 @@ function ImportGeojson(geojson) {
         source: vectorSource,
         style: function (feature) {
             feature.setStyle(myStyleFunctionLev(feature));
-            //return styles[feature.getGeometry().getType()];
         }
     });
 
 
     function myStyleFunctionLev(feature) {
 
-        if (feature.get('longtitude') == 117.975) {
-            console.log(feature.get('longtitude'));
-        }
-
-        /*if (feature.get('Tcount') > 0 && feature.get('Tcount') <= 2500) {
-            console.log(myStyles.lev1);
+        if (feature.get('rainfall') <= 0) {
             return myStyles.lev1;
         }
-        else if (feature.get('Tcount') > 2500 && feature.get('Tcount') <= 5000) {
 
+        else if (feature.get('rainfall') <= 5) {
             return myStyles.lev2;
         }
-        else if (feature.get('Tcount') > 5000 && feature.get('Tcount') <= 7500) {
 
+        else if (feature.get('rainfall') <= 10) {
             return myStyles.lev3;
         }
-        else if (feature.get('Tcount') > 7500 && feature.get('Tcount') <= 10000) {
 
-            return myStyles.lev4;
-        }
-        else {
-            return myStyles.lev5;
-        }*/
     }
 
 
 
-    /*var Fspouse = new ol.layer.Vector({
-        source: new ol.source.Vector({
-            format: new ol.format.GeoJSON(),
-            url: geojson
-            //url: './spouse_e3857.geojson'
-        }),
-        style: function (feature) {
-            feature.setStyle(myStyleFunctionLev(feature));
-        }
-    });*/
-
     var myStyles = {
 
-        lev1: new ol.style.Style({
-            fill: new ol.style.Fill({
-                color: '#edf8fb'
-            }),
-            stroke: new ol.style.Stroke({
-                color: '#159ff2',
-                width: 3.0
+        lev1: [new ol.style.Style({
+            image: new ol.style.Circle({
+                fill: new ol.style.Fill({ color: [255, 255, 255, 1] }),
+                stroke: new ol.style.Stroke({ color: [0, 0, 0, 1] }),
+                radius: 5
             })
-        }),
-        lev2: new ol.style.Style({
-            fill: new ol.style.Fill({
-                color: '#b3cde3'
-            }),
-            stroke: new ol.style.Stroke({
-                color: '#159ff2',
-                width: 3.0
+        })],
+
+        lev2: [new ol.style.Style({
+            image: new ol.style.Circle({
+                fill: new ol.style.Fill({ color: [70, 163, 255, 1] }),
+                stroke: new ol.style.Stroke({ color: [0, 0, 0, 1] }),
+                radius: 5
             })
-        }),
-        lev3: new ol.style.Style({
-            fill: new ol.style.Fill({
-                color: '#8c96c6'
-            }),
-            stroke: new ol.style.Stroke({
-                color: '#159ff2',
-                width: 3.0
+        })],
+
+        lev3: [new ol.style.Style({
+            image: new ol.style.Circle({
+                fill: new ol.style.Fill({ color: [0, 90, 181, 1] }),
+                stroke: new ol.style.Stroke({ color: [0, 0, 0, 1] }),
+                radius: 5
             })
-        }),
-        lev4: new ol.style.Style({
-            fill: new ol.style.Fill({
-                color: '#8856a7'
-            }),
-            stroke: new ol.style.Stroke({
-                color: '#159ff2',
-                width: 3.0
-            })
-        }),
-        lev5: new ol.style.Style({
-            fill: new ol.style.Fill({
-                color: '#810f7c'
-            }),
-            stroke: new ol.style.Stroke({
-                color: '#159ff2',
-                width: 3.0
-            })
-        }),
+        })],
+
 
     };
 
@@ -311,7 +245,6 @@ function GetContent(XML, size, initial_position, resolution) {
     //將初始點從左下角轉為左上角
     longitude = parseFloat(initial_position[0]);
     latitude = parseFloat(initial_position[1]) + (size[1] - 1) * resolution; //position[1] => latitude，size[1] =>  Y    
-    console.log(latitude);
 
     resolution = parseFloat(resolution);
 
@@ -337,7 +270,7 @@ function GetContent(XML, size, initial_position, resolution) {
 
             arr_raindata[row].push([value, longitude.toFixed(4), latitude.toFixed(4)]);
 
-            longitude = longitude + resolution;　//依次向右遞減
+            longitude = longitude + resolution; //依次向右遞減
 
             count++;
 
@@ -345,7 +278,7 @@ function GetContent(XML, size, initial_position, resolution) {
 
         longitude = temp_longitude;
 
-        latitude = latitude - resolution;　//依次向下遞減
+        latitude = latitude - resolution; //依次向下遞減
 
     }
 
@@ -387,18 +320,21 @@ function makeCorsRequest(method, url) {
                 parameter_child = parameter[i].getElementsByTagName('parameterName');
                 parameter_name = parameter_child[0].childNodes[0].nodeValue;
 
+
+
                 if (parameter_name == "左下角") {
 
-                    initial_position = GetInitialPosition(text, i);　//i為參數位置
+
+                    initial_position = GetInitialPosition(text, i); //i為參數位置
                 }
 
-                else if (parameter_name == "解析度") {
+                if (parameter_name == "解析度") {
 
                     resolution = GetResolution(text, i);
                 }
 
 
-                else if (parameter_name == "維度(nx*ny)") {
+                if (parameter_name == "維度(nx*ny)") {
 
                     size = GetMatrixSize(text, i);
 
@@ -422,7 +358,7 @@ function makeCorsRequest(method, url) {
                 if (!resolution) {
                     console.log("lost parameter resolution");
                 }
-                if (!parameter_name) {
+                if (!initial_position) {
                     console.log("lost parameter initial position");
                 }
             }
